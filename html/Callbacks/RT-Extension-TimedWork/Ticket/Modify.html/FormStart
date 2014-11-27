@@ -1,0 +1,6 @@
+<%INIT>
+$m->comp('/Ticket/Elements/FormStart', %ARGS);
+return;
+</%INIT>
+
+

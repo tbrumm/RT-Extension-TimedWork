@@ -1,0 +1,44 @@
+NAME
+    RT-Extension-TimedWork - Count Time worked Automatically
+
+DESCRIPTION
+    This extension add a Counter to every Ticket Modification Page and adds the Time
+    counted to the WorkedTime Field.
+
+RT VERSION
+    Works with RT 4.0
+
+INSTALLATION
+    perl Makefile.PL
+    make
+    make install
+        May need root permissions
+
+    Edit your /opt/rt4/etc/RT_SiteConfig.pm
+	Set( @Plugins, qw(RT::Extension::TimedWork) );
+
+    Add Configuration Settings:
+	Set($CountTimeWorked, 1);
+
+    Clear your mason cache
+            rm -rf /opt/rt4/var/mason_data/obj
+
+    Restart your webserver
+
+AUTHOR
+    Torsten Brumm <tbrumm@mac.com>
+
+Original Version from
+    Jesse Vincent <jesse@bestpractical.com>
+
+SEE ALSO
+    Original File found at this Posting:
+	http://www.mail-archive.com/rt-users@lists.bestpractical.com/msg04795.html
+
+LICENSE AND COPYRIGHT
+    This software is Copyright (c) 2014 by Best Practical Solutions, LLC.
+
+    This is free software, licensed under:
+
+      The GNU General Public License, Version 2, June 1991
+

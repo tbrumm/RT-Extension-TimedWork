@@ -1,0 +1,35 @@
+<%args>
+$ARGSRef
+</%args>
+
+<%init>
+if ( $ARGSRef->{'loadtime'} ) {
+    my $start_time = $session{'loadtimes'}{ $ARGSRef->{'loadtime'} };
+    $RT::Logger->warning("No time for that id!") unless defined $start_time;
+    # int() always rounds down. We'd rather round up
+    my $worked =      int( ( time() - $start_time ) / 60 ) + 1;
+
+    if ($worked > 6000) {
+        require Data::Dumper;
+        $RT::Logger->warning("Worked time is too high; id is ".$ARGSRef->{loadtime}.", start time is $start_time, now is ".time().", worked is $worked");
+        $RT::Logger->warning("Args are ".Dumper($ARGSRef));
+        $RT::Logger->warning("Session is ".Dumper(\%session));
+        $RT::Logger->warning("ENV is ".Dumper(\%ENV));
+        $worked = 0;
+    }
+
+    # New tickets should get TimeWorked.
+    if ( $ARGSRef->{'id'} eq 'new' ) {
+        $ARGSRef->{'TimeWorked'} =  $worked;
+
+    }
+    
+    # Existing tickets should get UpdateTimeWorked. 
+    else {
+        $ARGSRef->{'UpdateTimeWorked'} = $worked;
+    }
+
+}
+
+</%init>
+

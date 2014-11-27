@@ -1,0 +1,6 @@
+<%INIT>
+$m->comp('/Ticket/Elements/RecordLog', %ARGS);
+return;
+</%INIT>
+
+

@@ -1,0 +1,10 @@
+<& /Ticket/Elements/FormStart, %ARGS &>
+<%args>
+$ARGSRef
+</%args>
+<%init>
+if ($ARGSRef->{'loadtime'} and not exists $ARGSRef->{'SubmitTicket'}) {
+    $session{'loadtimes'}{ $m->notes('pageload_unique_id') }
+        = $session{'loadtimes'}{$ARGSRef->{'loadtime'}};
+}
+</%init>

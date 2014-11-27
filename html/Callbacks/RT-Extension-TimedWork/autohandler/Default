@@ -1,0 +1,8 @@
+<%init>
+$m->notes(pageload_unique_id => Data::UUID->new->create_str);
+$session{'loadtimes'}{$m->notes('pageload_unique_id')} = time();
+tied(%session)->save;
+</%init>
+<%once>
+use Data::UUID;
+</%once>

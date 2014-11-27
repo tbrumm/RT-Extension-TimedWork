@@ -1,0 +1,20 @@
+<& /Ticket/Elements/FormStart, %ARGS &>
+<%args>
+$ARGSRef
+</%args>
+<%init>
+if ($ARGSRef->{'loadtime'}) {
+    my $QueueObj = new RT::Queue($session{'CurrentUser'});
+    $QueueObj->Load($ARGSRef->{'Queue'}) || Abort(loc("Queue could not be loaded."));
+    my $CFs = $QueueObj->TicketCustomFields();
+    my $ValidCFs = $m->comp(
+        '/Elements/ValidateCustomFields',
+        CustomFields => $CFs,
+        ARGSRef => $ARGSRef,
+    );
+    if ($ARGS{'AddMoreAttach'} or not $ValidCFs) {
+        $session{'loadtimes'}{ $m->notes('pageload_unique_id') }
+            = $session{'loadtimes'}{$ARGSRef->{'loadtime'}};
+    }
+}
+</%init>

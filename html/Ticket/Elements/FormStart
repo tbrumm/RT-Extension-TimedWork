@@ -1,0 +1,8 @@
+<%ARGS>
+$Counter => RT->Config->Get( 'CountTimeWorked', $session{'CurrentUser'} )
+</%ARGS>
+
+% if ( $Counter ) {
+<input type="hidden" name="loadtime" value="<%$m->notes('pageload_unique_id')%>">
+<& Clock &>
+% }

@@ -1,0 +1,31 @@
+<div id="page_timer" style="position: absolute; bottom: 0; left: 0; margin-left: 20px; padding: 0px; background-color: white; color: red;" ></div>
+<script>
+%# // Pre-seed the time with whatever "extra" time they had before a "go" click on search or somesuch
+var i = <%time() -$session{'loadtimes'}{ $m->notes('pageload_unique_id') } %>
+
+function page_timer() {
+
+%# // A half-second iterator gets us a more natural blinking : between minutes and
+%# // and seconds. this is a bloody stupid hack, but expedient.
+
+i+= .5 ;
+
+var minutes = Math.floor( i / 60);
+var seconds = Math.floor(i % 60);
+
+var separator = ":";
+if (i % 1 ) separator = " ";
+
+%#// cheap zero-padding
+if (seconds < 10) seconds = "0"+ seconds;
+    document.getElementById('page_timer').innerHTML = "<pre>Time worked Counter: "+ minutes  +separator +seconds+"</pre>";
+    setTimeout('page_timer()', 500);
+}
+
+page_timer();
+
+
+</script>
+
+
+</body>

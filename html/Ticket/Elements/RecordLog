@@ -1,0 +1,46 @@
+<%args>
+$ARGSRef
+$TicketObj
+</%args>
+<%init>
+if ( my $loadtime = $ARGSRef->{'loadtime'} ) {
+
+    # If we're just searching for people, don't update the time worked, but
+    # do set the time that they started on this page to the previous time
+
+    if (   $ARGSRef->{'OnlySearchForPeople'}
+        or $ARGSRef->{'OnlySearchForGroup'} )
+    {
+
+        # Use the previous loadtime, not the current one.
+        $session{'loadtimes'}{ $m->notes('pageload_unique_id') }
+            = $session{'loadtimes'}{$loadtime};
+
+    } else {
+
+     # If we're not changing the timeworked, don't try to set it, as that will
+     # blow away any recorded time from this page load
+        if ( defined $ARGSRef->{'TimeWorked'}
+            and $ARGSRef->{'TimeWorked'} == $TicketObj->TimeWorked )
+        {
+            delete $ARGSRef->{'TimeWorked'};
+        }
+        my $start = $session{loadtimes}{$loadtime};
+        if ($start) {
+
+            # int() rounds down. fix that.
+            my $worked = int( ( time() - $start ) / 60 ) + 1;
+
+            # XXX TODO, we should have a public API for this
+            $TicketObj->_NewTransaction(
+                TimeTaken => $worked,
+                Data      => $m->request_comp()->path,
+                Field     => '_WebUpdate',
+                Type      => 'Worklog'
+            );
+        } else {
+            require Data::Dumper;
+        }
+    }
+}
+</%init>

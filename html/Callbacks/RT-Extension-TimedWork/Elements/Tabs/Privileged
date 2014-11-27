@@ -1,0 +1,46 @@
+<%INIT>
+my $request_path = $HTML::Mason::Commands::r->path_info;
+
+my $query_string = sub {
+    my %args = @_;
+    my $u    = URI->new();
+    $u->query_form(%args);
+    return $u->query;
+};
+
+
+if (            
+     (           
+            $request_path =~ m{^/Search/}
+         && $request_path !~ m{^/Search/Simple\.html}
+     )       
+     || (   $request_path =~ m{^/Search/Simple\.html}
+         && $DECODED_ARGS->{'q'} )
+   ) {
+    
+    my $has_query = '';
+    my $current_search = $session{"CurrentSearchHash"} || {};
+    $has_query = 1 if ( $DECODED_ARGS->{'Query'} or $current_search->{'Query'} );
+
+if ( $Counter ) {
+    if ( $has_query ) {
+        my $tabs = PageMenu;
+        my $feeds = $tabs->child('more'); 
+        
+        $feeds->child(
+            'TTSV' => title => loc('Transactions TSV'),
+            path => '/Search/Transactions.tsv?' . $query_string->( %{ $m->request_args } )
+        );
+        $feeds->child(
+            'TRSS' => title => loc('Transactions RSS'),
+            path => '/Search/Transactions.rss?' . $query_string->( %{ $m->request_args } )
+        );
+    }
+    }
+}
+
+</%INIT>
+
+<%ARGS>
+$Counter => RT->Config->Get( 'CountTimeWorked', $session{'CurrentUser'} )
+</%ARGS>
